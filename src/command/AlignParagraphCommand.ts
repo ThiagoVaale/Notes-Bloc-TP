@@ -1,5 +1,5 @@
+import type { AlignmentStrategy } from "../strategy/AlignmentStrategy";
 import type { Command } from "./Command";
-
 //Relacion con startegy.
 //Command no sabe como alinear un parrafo.
 //Solo encapsula la accion 'aplicar alineacion'y 'deshacerla'
@@ -11,10 +11,10 @@ import type { Command } from "./Command";
 
 export class AlignParagraphCommand implements Command {
     private paragraph: string[];
-    private strategy: AligmentStrategy; //Implementacion con strategy para alineado de parrafo
+    private strategy: AlignmentStrategy; //Implementacion con strategy para alineado de parrafo
     private previousState: string[];
 
-    constructor(paragraph: string[], strategy: AligmentStrategy){
+    constructor(paragraph: string[], strategy: AlignmentStrategy){
         this.paragraph = paragraph;
         this.strategy = strategy;
         this.previousState = [...paragraph];    
@@ -24,7 +24,7 @@ export class AlignParagraphCommand implements Command {
         this.paragraph = this.strategy.apply(this.paragraph);
     }
 
-    void(): void {
+    undo(): void {
         this.paragraph = [...this.previousState]
     }
 }
