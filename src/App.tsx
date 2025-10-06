@@ -1,34 +1,68 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useCallback } from 'react'
 import './App.css'
+import { Document } from './composite/Document'
+import { Word } from './composite/Word'
+import { CommandHistory } from './command/CommandHistory'
+import { InsertWordCommand } from './command/InsertWordCommand'
+import { DeleteWordCommand } from './command/DeleteWordCommand'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [document, setDocument] = useState<Document>(new Document())
+  const [content, setContent] = useState<string>('')
+  const commandHistory = new CommandHistory()
+
+  const handleInsertWord = useCallback((text: string) => {
+    const word = new Word(text)
+    const command = new InsertWordCommand(document, word)
+    commandHistory.executeCommand(command)
+    setContent(document.getContent())
+  }, [document])
+
+  const handleDelete = useCallback(() => {
+    const command = new DeleteWordCommand(document)
+    commandHistory.executeCommand(command)
+    setContent(document.getContent())
+  }, [document])
+
+  const handleUndo = useCallback(() => {
+    commandHistory.undo()
+    setContent(document.getContent())
+  }, [])
+
+  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === ' ') {
+      const text = (e.target as HTMLTextAreaElement).value.trim()
+      if (text) {
+        handleInsertWord(text)
+        ;(e.target as HTMLTextAreaElement).value = ''
+      }
+      e.preventDefault()
+    }
+  }, [handleInsertWord])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div className="editor-container">
+      <div className="toolbar">
+        <button onClick={handleUndo} disabled={!commandHistory.undo()}>
+          Undo
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <button onClick={handleDelete}>Delete Word</button>
+        <div>
+          Words: {document.countWords()}
+          Pages: {document.countPages()}
+        </div>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      
+      <div className="editor">
+        <div className="preview">
+          {content}
+        </div>
+        <textarea
+          onKeyPress={handleKeyPress}
+          placeholder="Type and press space to add words..."
+        />
+      </div>
+    </div>
   )
 }
 
