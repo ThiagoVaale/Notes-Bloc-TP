@@ -1,22 +1,28 @@
 import type { Command } from "./Command";
+import type { Document } from "../composite/Document";
+import { Word } from "../composite/Word";
 
+export class InsertWordCommand implements Command {
+  private inserted = false;
 
-export class InsertCharCommand implements Command {
-    private document: string[];
-    private word: string;
-    private position: number;
+  // ⛔️ NO usar parameter properties aquí
+  private readonly doc: Document;
+  private readonly word: Word;
 
-    constructor(document: string[], word: string, position: number){
-        this.document = document;
-        this.word = word;
-        this.position = position;
+  constructor(doc: Document, word: Word) {
+    this.doc = doc;
+    this.word = word;
+  }
+
+  execute(): void {
+    this.doc.insertWord(this.word);
+    this.inserted = true;
+  }
+
+  undo(): void {
+    if (this.inserted) {
+      this.doc.removeLastWord?.();
+      this.inserted = false;
     }
-
-    execute(): void {
-        this.document.splice(this.position, 0, this.word);
-    }
-
-    undo(): void {
-        this.document.splice(this.position, 1);
-    }
+  }
 }

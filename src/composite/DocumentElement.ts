@@ -9,4 +9,7 @@ export interface DocumentElement {
   countWords(): number;
 
   countPages(): number;
+  getLastChild?(): DocumentElement | null;
+  removeLastWord?(): DocumentElement | null;
+  isEmpty?(): boolean
 }

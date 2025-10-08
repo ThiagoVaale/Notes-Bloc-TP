@@ -1,24 +1,26 @@
+import type { DocumentElement } from "../composite/DocumentElement";
+import type { EditableDocument } from "../composite/EditableDocument";
 import type { Command } from "./Command";
 
 
-export class DeleteCommand implements Command {
-    private document: string[];
-    private position: number;
-    private deletedWord: string | null = null;
+export class DeleteWordCommand implements Command {
+  private doc: EditableDocument;
+  private removed: DocumentElement | null = null;
 
-    constructor(document: string[], position:number){
-        this.document = document;
-        this.position = position;
-    }
+  constructor(doc: EditableDocument) {
+    this.doc = doc;
+  }
 
-    execute(): void {
-        this.deletedWord = this.document[this.position];
-        this.document.splice(this.position, 1);
-    }
+  execute(): void {
+    this.removed = this.doc.removeLastWord();
+  }
 
-    undo(): void{
-        if(this.deletedWord !== null){
-            this.document.splice(this.position, 0, this.deletedWord);
-        }
+  undo(): void {
+    if (this.removed) {
+      // reinsertamos al final (línea actual)
+      const { line } = this.doc.ensureWritableTail();
+      line.add(this.removed);
+      this.removed = null;
     }
+  }
 }
