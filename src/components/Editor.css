@@ -253,3 +253,14 @@
     height: 500px;
   }
 }
+
+.pagination-info {
+  margin-top: 6px;
+  color: #808080;
+  font-size: 0.8rem;
+  font-style: italic;
+  text-align: center;
+  opacity: 0.8;
+  user-select: none;
+}
+

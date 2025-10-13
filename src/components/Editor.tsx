@@ -88,7 +88,9 @@ export const Editor: React.FC = () => {
   const handleAlign = (type: Alignment) => {
     if (type === alignment) return;
 
-    history.executeCommand(new ChangeAlignmentCommand(setAlignment, alignment, type));
+    history.executeCommand(
+      new ChangeAlignmentCommand(setAlignment, alignment, type)
+    );
 
     let strategy;
     switch (type) {
@@ -207,15 +209,32 @@ export const Editor: React.FC = () => {
             ▶
           </button>
         </div>
+
+        <div className="pagination-info">
+          Se genera una nueva página automáticamente al superar las 10 líneas
+          de texto.
+        </div>
       </main>
 
       <footer className="editor-footer">
-        <div>Words: <strong>{wordCount}</strong></div>
-        <div>Letters: <strong>{letterCount}</strong></div>
-        <div>Lines: <strong>{lineCount}</strong></div>
-        <div>Paragraphs: <strong>{paragraphCount}</strong></div>
-        <div>Pages: <strong>{pageCount}</strong></div>
-        <div>Alignment: <span className="align-label">{alignment}</span></div>
+        <div>
+          Words: <strong>{wordCount}</strong>
+        </div>
+        <div>
+          Letters: <strong>{letterCount}</strong>
+        </div>
+        <div>
+          Lines: <strong>{lineCount}</strong>
+        </div>
+        <div>
+          Paragraphs: <strong>{paragraphCount}</strong>
+        </div>
+        <div>
+          Pages: <strong>{pageCount}</strong>
+        </div>
+        <div>
+          Alignment: <span className="align-label">{alignment}</span>
+        </div>
       </footer>
     </div>
   );
