@@ -6,18 +6,15 @@ import { DeleteCommand } from "../command/DeleteCommand";
 const doc = new Document();
 const history = new CommandHistory();
 
-// Simular escritura
 history.executeCommand(new InsertCharCommand(doc, "H"));
 history.executeCommand(new InsertCharCommand(doc, "o"));
 history.executeCommand(new InsertCharCommand(doc, "l"));
 history.executeCommand(new InsertCharCommand(doc, "a"));
 
-console.log("Texto actual:", doc.getText()); // 👉 "Hola"
+console.log("Texto actual:", doc.getText()); 
 
-// Borrar una letra
 history.executeCommand(new DeleteCommand(doc));
-console.log("Después de borrar:", doc.getText()); // 👉 "Hol"
+console.log("Después de borrar:", doc.getText()); 
 
-// Deshacer (CTRL+Z simulado)
 history.undo();
-console.log("Después de undo:", doc.getText()); // 👉 "Hola"
+console.log("Después de undo:", doc.getText()); 

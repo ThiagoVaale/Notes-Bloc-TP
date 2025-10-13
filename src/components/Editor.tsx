@@ -28,9 +28,8 @@ export const Editor: React.FC = () => {
   const history = useRef(new CommandHistory()).current;
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  const MAX_LINES_PER_PAGE = 25;
+  const MAX_LINES_PER_PAGE = 10;
 
-  // 🔹 Efecto principal: conteo y división
   useEffect(() => {
     const main = document.querySelector(".editor-main");
     if (main) {
@@ -111,7 +110,6 @@ export const Editor: React.FC = () => {
     requestAnimationFrame(() => textAreaRef.current?.focus());
   };
 
-  // 🔹 Función: dividir texto en páginas
   const getPages = (): string[] => {
     const lines = text.split("\n");
     const pages: string[] = [];
@@ -126,7 +124,6 @@ export const Editor: React.FC = () => {
   const pages = getPages();
   const currentText = pages[currentPage - 1] || "";
 
-  // 🔹 Cambiar página
   const handlePageChange = (dir: "next" | "prev") => {
     setCurrentPage((prev) => {
       if (dir === "next" && prev < pageCount) return prev + 1;
@@ -138,7 +135,6 @@ export const Editor: React.FC = () => {
 
   return (
     <div className="editor-wrapper">
-      {/* HEADER */}
       <header className="editor-header">
         <h1>📝 Text Editor</h1>
         <div className="toolbar">
@@ -173,7 +169,6 @@ export const Editor: React.FC = () => {
         </div>
       </header>
 
-      {/* MAIN */}
       <main className={`editor-main${text.trim() ? " has-text" : ""}`}>
         <div className="editor-page">
           <div className="page-header">Page {currentPage}</div>
@@ -193,7 +188,6 @@ export const Editor: React.FC = () => {
           </div>
         </div>
 
-        {/* PAGINATION CONTROL */}
         <div className="pagination-controls">
           <button
             className="page-btn"
@@ -215,7 +209,6 @@ export const Editor: React.FC = () => {
         </div>
       </main>
 
-      {/* FOOTER */}
       <footer className="editor-footer">
         <div>Words: <strong>{wordCount}</strong></div>
         <div>Letters: <strong>{letterCount}</strong></div>
