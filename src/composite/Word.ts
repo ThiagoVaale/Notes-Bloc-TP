@@ -1,25 +1,25 @@
-import type { DocumentElement } from './DocumentElement';
+import type { DocumentElement } from "./DocumentElement";
 
 export class Word implements DocumentElement {
-  private readonly content: string;
+  private text: string;
 
-  constructor(content: string) {
-    this.content = content;
+  constructor(text: string) {
+    this.text = text;
   }
 
-  public add(): void {
-    throw new Error("Cannot add child to a Word. It's a leaf element.");
+  getText(): string {
+    return this.text;
   }
 
-  public getContent(): string {
-    return this.content;
+  setText(value: string): void {
+    this.text = value;
   }
 
-  public countWords(): number {
-    return 1;
+  getWordCount(): number {
+    return this.text.trim() ? 1 : 0;
   }
 
-  public countPages(): number {
+  getPageCount(): number {
     return 0;
   }
 }

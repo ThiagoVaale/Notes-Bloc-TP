@@ -1,45 +1,37 @@
 import type { DocumentElement } from "./DocumentElement";
 import { Line } from "./Line";
+import { Word } from "./Word";
 
 export class Paragraph implements DocumentElement {
-  protected readonly children: Line[] = [];
+  private lines: Line[] = [new Line()];
 
-  add(child: DocumentElement): void {
-    if (child instanceof Line) {
-      this.children.push(child);
-    } else {
-      throw new Error("A Paragraph can only contain Line elements.");
-    }
+  add(element: DocumentElement): void {
+    this.lines.push(element as Line);
   }
 
-  getContent(): string {
-    return this.children.map(c => c.getContent()).join("\n");
+  getText(): string {
+    return this.lines.map(l => l.getText()).join("\n");
   }
 
-  countWords(): number {
-    return this.children.reduce((s, c) => s + c.countWords(), 0);
+  getWordCount(): number {
+    return this.lines.reduce((sum, l) => sum + l.getWordCount(), 0);
   }
 
-  countPages(): number {
+  getPageCount(): number {
     return 0;
   }
 
-  /** 🔧 agregado para comandos */
-  getLastChild(): DocumentElement | null {
-    return this.children.length ? this.children[this.children.length - 1] : null;
+  insertChar(char: string): void {
+    this.lines[this.lines.length - 1].insertChar(char);
   }
 
-  /** 🔧 agregado */
-  removeLastWord(): DocumentElement | null {
-    const last = this.getLastChild() as Line | null;
-    if (!last) return null;
-    const removed = last.removeLastWord?.() ?? null;
-    if (last.isEmpty?.()) this.children.pop();
-    return removed;
+  deleteChar(): void {
+    this.lines[this.lines.length - 1].deleteLastChar();
   }
 
-  /** 🔧 agregado */
-  isEmpty(): boolean {
-    return this.children.length === 0;
+  setText(value: string): void {
+    this.lines = [new Line()];
+    const words = value.split(/(\s+)/);
+    words.forEach(w => this.lines[0].add(new Word(w)));
   }
 }

@@ -1,22 +1,20 @@
+import { Document } from "../composite/Document";
 import type { Command } from "./Command";
 
-
 export class InsertCharCommand implements Command {
-    private document: string[];
-    private char: string;
-    private position: number;
+  private document: Document;
+  private char: string;
 
-    constructor(document: string[], char: string, position: number){
-        this.document = document;
-        this.char = char;
-        this.position = position;
-    }
+  constructor(document: Document, char: string) {
+    this.document = document;
+    this.char = char;
+  }
 
-    execute(): void {
-        this.document.splice(this.position, 0, this.char);
-    }
+  execute(): void {
+    this.document.insertChar(this.char);
+  }
 
-    undo(): void {
-        this.document.splice(this.position, 1);
-    }
+  undo(): void {
+    this.document.deleteChar();
+  }
 }

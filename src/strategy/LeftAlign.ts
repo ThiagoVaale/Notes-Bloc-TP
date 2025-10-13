@@ -1,7 +1,10 @@
 import type { AlignmentStrategy } from "./AlignmentStrategy";
 
 export class LeftAlign implements AlignmentStrategy {
-  apply(lines: string[]): string[] {
-    return lines.map(line => line.trimStart());
+  align(text: string): string {
+    return text
+      .split("\n")
+      .map(line => line.trimStart())
+      .join("\n");
   }
 }

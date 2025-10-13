@@ -2,40 +2,38 @@ import type { DocumentElement } from "./DocumentElement";
 import { Word } from "./Word";
 
 export class Line implements DocumentElement {
-  protected readonly children: Word[] = [];
+  private words: Word[] = [];
 
-  add(child: DocumentElement): void {
-    if (child instanceof Word) {
-      this.children.push(child);
-    } else {
-      throw new Error("A Line can only contain Word elements.");
-    }
+  add(element: DocumentElement): void {
+    this.words.push(element as Word);
   }
 
-  getContent(): string {
-    return this.children.map(c => c.getContent()).join(" ");
+  getText(): string {
+    return this.words.map(w => w.getText()).join("");
   }
 
-  countWords(): number {
-    return this.children.reduce((s, c) => s + c.countWords(), 0);
+  getWordCount(): number {
+    return this.words.reduce((sum, w) => sum + w.getWordCount(), 0);
   }
 
-  countPages(): number {
+  getPageCount(): number {
     return 0;
   }
 
-  /** 🔧 agregado: para editar desde comandos */
-  removeLastWord(): DocumentElement | null {
-    return this.children.length > 0 ? this.children.pop() ?? null : null;
+  insertChar(char: string): void {
+    if (this.words.length === 0 || /\s/.test(char)) {
+      this.words.push(new Word(char));
+    } else {
+      const last = this.words[this.words.length - 1];
+      last.setText(last.getText() + char);
+    }
   }
 
-  /** 🔧 agregado */
-  isEmpty(): boolean {
-    return this.children.length === 0;
-  }
-
-  /** 🔧 agregado */
-  getLastChild(): DocumentElement | null {
-    return this.children.length ? this.children[this.children.length - 1] : null;
+  deleteLastChar(): void {
+    const last = this.words[this.words.length - 1];
+    if (!last) return;
+    const text = last.getText().slice(0, -1);
+    if (text.length === 0) this.words.pop();
+    else last.setText(text);
   }
 }

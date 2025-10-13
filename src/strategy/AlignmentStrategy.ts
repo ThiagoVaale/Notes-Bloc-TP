@@ -1,3 +1,3 @@
 export interface AlignmentStrategy {
-    apply(lines: string[]): string[];
+  align(text: string, width: number): string;
 }

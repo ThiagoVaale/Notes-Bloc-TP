@@ -1,14 +1,14 @@
 import type { AlignmentStrategy } from "./AlignmentStrategy";
 
 export class CenterAlign implements AlignmentStrategy {
-  apply(lines: string[]): string[] {
-    const maxLength = Math.max(...lines.map(line => line.trim().length));
-    return lines.map(line => {
-      const trimmed = line.trim();
-      const totalSpaces = maxLength - trimmed.length;
-      const leftSpaces = Math.floor(totalSpaces / 2);
-      const rightSpaces = totalSpaces - leftSpaces;
-      return " ".repeat(leftSpaces) + trimmed + " ".repeat(rightSpaces);
-    });
+  align(text: string, width: number): string {
+    return text
+      .split("\n")
+      .map(line => {
+        const trimmed = line.trim();
+        const spaces = Math.floor((width - trimmed.length) / 2);
+        return " ".repeat(spaces > 0 ? spaces : 0) + trimmed;
+      })
+      .join("\n");
   }
 }

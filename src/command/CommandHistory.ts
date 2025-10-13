@@ -1,20 +1,20 @@
 import type { Command } from "./Command";
 
-
 export class CommandHistory {
-    private history: Command[] = [];
-
-    execute(command: Command): void {
+  private history: Command[] = [];
+  private pointer: number = -1;
+  
+  executeCommand(command: Command): void {
     command.execute();
     this.history.push(command);
   }
 
-  canUndo(): boolean {
-    return this.history.length > 0;
-  }
-
   undo(): void {
-    const cmd = this.history.pop();
-    if (cmd) cmd.undo();
+    const command = this.history.pop();
+    if (command) command.undo();
+  }
+  
+  canUndo(): boolean {
+    return this.pointer >= 0;
   }
 }
